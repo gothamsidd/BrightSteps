@@ -127,9 +127,14 @@ export default function Header() {
               </DropdownMenu>
             </>
           ) : (
-            <Link href="/login">
-              <Button variant="outline">Sign In</Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/register">
+                <Button variant="ghost">Sign Up</Button>
+              </Link>
+              <Link href="/login">
+                <Button variant="outline">Sign In</Button>
+              </Link>
+            </div>
           )}
         </div>
       </nav>
