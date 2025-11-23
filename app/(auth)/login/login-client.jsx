@@ -5,6 +5,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -37,59 +38,33 @@ export default function LoginClient() {
     };
 
     return (
-        <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-            {/* Left Side - Branding */}
-            <div className="hidden bg-muted lg:block relative overflow-hidden">
-                <div className="absolute inset-0 bg-zinc-900" />
-                <div className="relative z-20 flex h-full flex-col justify-between p-10 text-white">
-                    <div className="flex items-center text-lg font-medium">
+        <div className="flex items-center justify-center min-h-screen px-4">
+            <Card className="w-full max-w-md border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl">
+                <CardHeader className="space-y-4 flex flex-col items-center text-center pb-2">
+                    <Link href="/">
                         <Image
                             src="/logo.svg"
                             alt="BrightSteps Logo"
-                            width={150}
-                            height={40}
-                            className="brightness-0 invert"
+                            width={180}
+                            height={50}
+                            className="h-12 w-auto object-contain mb-2"
                         />
-                    </div>
-                    <div className="space-y-6">
-                        <blockquote className="space-y-2">
-                            <p className="text-lg">
-                                &ldquo;This AI career coach has completely transformed how I prepare for interviews. The insights are incredibly accurate and helpful.&rdquo;
-                            </p>
-                            <footer className="text-sm text-zinc-400">Sofia Davis</footer>
-                        </blockquote>
-                        <div className="flex gap-4">
-                            <div className="h-1 w-12 rounded-full bg-white" />
-                            <div className="h-1 w-12 rounded-full bg-zinc-700" />
-                            <div className="h-1 w-12 rounded-full bg-zinc-700" />
-                        </div>
-                    </div>
-                </div>
-                {/* Abstract Background Pattern */}
-                <div className="absolute inset-0 z-10 opacity-20">
-                    <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
-                    </svg>
-                </div>
-            </div>
-
-            {/* Right Side - Form */}
-            <div className="flex items-center justify-center py-12">
-                <div className="mx-auto w-full max-w-[350px] space-y-6 px-4">
-                    <div className="flex flex-col space-y-2 text-center">
-                        <h1 className="text-2xl font-bold tracking-tight">
+                    </Link>
+                    <div className="space-y-2">
+                        <CardTitle className="text-2xl font-bold tracking-tight text-white">
                             Welcome back
-                        </h1>
-                        <p className="text-sm text-muted-foreground">
+                        </CardTitle>
+                        <CardDescription className="text-gray-400">
                             Enter your email to sign in to your account
-                        </p>
+                        </CardDescription>
                     </div>
-
+                </CardHeader>
+                <CardContent className="space-y-6 pt-4">
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" className="text-gray-200">Email</Label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                 <Input
                                     id="email"
                                     type="email"
@@ -97,35 +72,35 @@ export default function LoginClient() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="pl-9"
+                                    className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:ring-blue-500/20"
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="password" className="text-gray-200">Password</Label>
                                 <Link
                                     href="/forgot-password"
-                                    className="text-sm font-medium text-primary hover:underline"
+                                    className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
                                 >
                                     Forgot password?
                                 </Link>
                             </div>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                 <Input
                                     id="password"
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="pl-9 pr-9"
+                                    className="pl-9 pr-9 bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:ring-blue-500/20"
                                 />
                                 <Button
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    className="absolute right-0 top-0 h-10 w-10 text-muted-foreground hover:text-foreground"
+                                    className="absolute right-0 top-0 h-10 w-10 text-gray-400 hover:text-white hover:bg-transparent"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? (
@@ -137,7 +112,11 @@ export default function LoginClient() {
                                 </Button>
                             </div>
                         </div>
-                        <Button type="submit" className="w-full" disabled={loading}>
+                        <Button
+                            type="submit"
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0"
+                            disabled={loading}
+                        >
                             {loading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -154,22 +133,22 @@ export default function LoginClient() {
 
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-gray-200 dark:border-gray-800" />
+                            <span className="w-full border-t border-white/10" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground font-medium tracking-wide">
+                            <span className="bg-transparent px-2 text-gray-400 font-medium tracking-wide backdrop-blur-xl">
                                 New to BrightSteps?
                             </span>
                         </div>
                     </div>
 
-                    <Link href="/register">
-                        <Button variant="outline" className="w-full">
+                    <Link href="/register" className="block">
+                        <Button variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10 hover:text-white">
                             Create an account
                         </Button>
                     </Link>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }
