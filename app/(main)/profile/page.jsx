@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { checkUser } from "@/lib/checkUser";
 import { redirect } from "next/navigation";
 import ProfileForm from "./_components/profile-form";
