@@ -11,13 +11,14 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, User, Mail, Lock, ArrowRight } from "lucide-react";
+import { Loader2, User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 
 export default function RegisterPage() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const { register } = useAuth();
     const router = useRouter();
@@ -77,7 +78,7 @@ export default function RegisterPage() {
             <div className="flex items-center justify-center py-12">
                 <div className="mx-auto w-full max-w-[350px] space-y-6 px-4">
                     <div className="flex flex-col space-y-2 text-center">
-                        <h1 className="text-2xl font-semibold tracking-tight">
+                        <h1 className="text-2xl font-bold tracking-tight">
                             Create an account
                         </h1>
                         <p className="text-sm text-muted-foreground">
@@ -121,12 +122,26 @@ export default function RegisterPage() {
                                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                 <Input
                                     id="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="pl-9"
+                                    className="pl-9 pr-9"
                                 />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-0 top-0 h-10 w-10 text-muted-foreground hover:text-foreground"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-4 w-4" />
+                                    ) : (
+                                        <Eye className="h-4 w-4" />
+                                    )}
+                                    <span className="sr-only">Toggle password visibility</span>
+                                </Button>
                             </div>
                         </div>
                         <Button type="submit" className="w-full" disabled={loading}>
@@ -146,10 +161,10 @@ export default function RegisterPage() {
 
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
+                            <span className="w-full border-t border-gray-200 dark:border-gray-800" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
+                            <span className="bg-background px-2 text-muted-foreground font-medium tracking-wide">
                                 Already have an account?
                             </span>
                         </div>
