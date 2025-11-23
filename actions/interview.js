@@ -11,7 +11,7 @@ export async function generateQuiz() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY is missing");
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const prompt = `
     Generate 10 technical interview questions for a ${user.industry
@@ -74,7 +74,7 @@ export async function saveQuizResult(questions, answers, score) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const improvementPrompt = `
       The user got the following ${user.industry} technical interview questions wrong:
