@@ -20,7 +20,7 @@ export async function POST(req) {
 
         if (!user || !user.password) {
             return NextResponse.json(
-                { error: "Invalid credentials" },
+                { error: "No account found with this email. Please sign up first." },
                 { status: 401 }
             );
         }
@@ -29,7 +29,7 @@ export async function POST(req) {
 
         if (!isValid) {
             return NextResponse.json(
-                { error: "Invalid credentials" },
+                { error: "Invalid credentials. Please check your password." },
                 { status: 401 }
             );
         }
