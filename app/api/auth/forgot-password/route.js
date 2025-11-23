@@ -46,7 +46,11 @@ export async function POST(req) {
 
         // Send email using Resend
         try {
-            await resend.emails.send({
+            console.log("Attempting to send email to:", email);
+            console.log("Using API key:", process.env.RESEND_API_KEY ? "API key is set" : "API key is MISSING");
+            console.log("From email:", process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev");
+
+            const result = await resend.emails.send({
                 from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
                 to: email,
                 subject: "Reset Your BrightSteps Password",
@@ -64,9 +68,12 @@ export async function POST(req) {
         `,
             });
 
-            console.log("Password reset email sent to:", email);
+            console.log("✅ Password reset email sent successfully!");
+            console.log("Email ID:", result.id);
         } catch (emailError) {
-            console.error("Failed to send email:", emailError);
+            console.error("❌ Failed to send email:");
+            console.error("Error message:", emailError.message);
+            console.error("Error details:", JSON.stringify(emailError, null, 2));
             // Still return success to user (don't reveal if email failed)
         }
 
