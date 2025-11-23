@@ -17,7 +17,7 @@ export default function VideoModal() {
                 <Button
                     size="lg"
                     variant="outline"
-                    className="px-8 bg-white text-primary hover:bg-blue-50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-primary/20"
+                    className="px-8 bg-white text-primary hover:bg-blue-50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-primary/20"
                 >
                     <PlayCircle className="mr-2 h-5 w-5" />
                     Watch Demo

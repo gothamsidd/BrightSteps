@@ -10,7 +10,12 @@ export async function updateUser(data) {
   if (!user) throw new Error("Unauthorized");
 
   try {
-    console.log("updateUser called with data:", data);
+    const fs = require('fs');
+    const path = require('path');
+    const logPath = path.join(process.cwd(), 'debug.log');
+    const log = (msg) => fs.appendFileSync(logPath, new Date().toISOString() + ': ' + msg + '\n');
+
+    log("updateUser called with data: " + JSON.stringify(data));
 
     // Start a transaction to handle both operations
     const result = await db.$transaction(
@@ -29,6 +34,11 @@ export async function updateUser(data) {
         if (!industryInsight) {
           console.log("Generating AI insights for:", data.industry);
           const insights = await generateAIInsights(data.industry);
+
+          if (!insights || typeof insights !== "object" || Array.isArray(insights)) {
+            throw new Error("Invalid AI Insights generated");
+          }
+
           console.log("AI Insights generated");
 
           industryInsight = await db.industryInsight.create({
@@ -39,6 +49,18 @@ export async function updateUser(data) {
             },
           });
           console.log("Industry insight created");
+        }
+
+        // Check if user is trying to update name
+        const userToUpdate = await tx.user.findUnique({
+          where: { id: user.id },
+          select: { nameUpdated: true }
+        });
+
+        if (data.name && data.name !== user.name) {
+          if (userToUpdate.nameUpdated) {
+            throw new Error("Name can only be changed once.");
+          }
         }
 
         // Now update the user
@@ -52,6 +74,8 @@ export async function updateUser(data) {
             experience: data.experience,
             bio: data.bio,
             skills: data.skills,
+            name: data.name,
+            nameUpdated: data.name && data.name !== user.name ? true : undefined,
           },
         });
         console.log("User updated");
@@ -66,6 +90,16 @@ export async function updateUser(data) {
     revalidatePath("/");
     return result.updatedUser;
   } catch (error) {
+    const fs = require('fs');
+    const path = require('path');
+    const logPath = path.join(process.cwd(), 'debug.log');
+    const log = (msg) => fs.appendFileSync(logPath, new Date().toISOString() + ': ' + msg + '\n');
+
+    log("CAUGHT ERROR TYPE: " + typeof error);
+    log("CAUGHT ERROR STRING: " + String(error));
+    log("CAUGHT ERROR OBJECT: " + JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    log("STACK: " + error.stack);
+
     console.log("CAUGHT ERROR TYPE:", typeof error);
     console.log("CAUGHT ERROR STRING:", String(error));
     console.log("CAUGHT ERROR OBJECT:", JSON.stringify(error, Object.getOwnPropertyNames(error)));

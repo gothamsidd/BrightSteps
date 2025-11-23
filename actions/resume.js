@@ -55,6 +55,10 @@ export async function improveWithAI({ current, type }) {
 
   if (!userWithInsights) throw new Error("User not found");
 
+  const apiKey = process.env.GEMINI_API_KEY;
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+
   const prompt = `
     As an expert resume writer, improve the following ${type} description for a ${userWithInsights.industry} professional.
     Make it more impactful, quantifiable, and aligned with industry standards.

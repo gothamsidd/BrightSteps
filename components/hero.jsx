@@ -41,9 +41,9 @@ const HeroSection = () => {
             AI-powered tools for job success.
           </p>
         </div>
-        <div className="flex justify-center space-x-4">
-          <Link href="/dashboard">
-            <Button size="lg" className="px-8">
+        <div className="flex justify-center space-x-4 relative z-10">
+          <Link href="/dashboard" prefetch={true}>
+            <Button size="lg" className="px-8 hover:scale-105 transition-transform duration-200">
               Get Started
             </Button>
           </Link>
