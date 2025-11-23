@@ -11,7 +11,7 @@ export async function generateQuiz() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY is missing");
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
   const prompt = `
     Generate 10 technical interview questions for a ${user.industry
@@ -37,7 +37,7 @@ export async function generateQuiz() {
     const result = await model.generateContent(prompt);
     const response = result.response;
     const text = response.text();
-    const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
+    const cleanedText = text.replace(/```(?:json)?\n?/g, "").replace(/```/g, "").trim();
     const quiz = JSON.parse(cleanedText);
 
     return quiz.questions;
@@ -74,7 +74,7 @@ export async function saveQuizResult(questions, answers, score) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     const improvementPrompt = `
       The user got the following ${user.industry} technical interview questions wrong:
