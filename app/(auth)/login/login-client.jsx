@@ -68,11 +68,16 @@ export default function LoginClient() {
                         <Button type="submit" className="w-full" disabled={loading}>
                             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Login"}
                         </Button>
-                        <div className="text-center text-sm">
-                            Don&apos;t have an account?{" "}
-                            <Link href="/register" className="underline hover:text-primary">
-                                Sign up
+                        <div className="text-center text-sm space-y-2">
+                            <Link href="/forgot-password" className="block text-muted-foreground hover:text-primary underline">
+                                Forgot password?
                             </Link>
+                            <div>
+                                Don&apos;t have an account?{" "}
+                                <Link href="/register" className="underline hover:text-primary">
+                                    Sign up
+                                </Link>
+                            </div>
                         </div>
                     </form>
                 </CardContent>

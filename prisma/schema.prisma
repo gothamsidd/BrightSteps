@@ -20,6 +20,10 @@ model User {
   updatedAt     DateTime  @updatedAt
   nameUpdated   Boolean   @default(false)
 
+  // Password reset fields
+  resetToken        String?   // Password reset token
+  resetTokenExpiry  DateTime? // Token expiration time
+
   // Profile fields
   bio           String?
   experience    Int?      // Years of experience
