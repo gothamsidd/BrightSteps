@@ -47,19 +47,26 @@ export default function ForgotPasswordClient() {
                     <CardTitle>Forgot Password</CardTitle>
                     <CardDescription>
                         {submitted
-                            ? "Check your email for reset instructions"
+                            ? "Check your email"
                             : "Enter your email to receive a password reset link"}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     {submitted ? (
                         <div className="space-y-4">
-                            <p className="text-sm text-muted-foreground">
-                                If an account exists with <strong>{email}</strong>, you will receive a password reset link shortly.
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                                Check your console for the reset link (development mode).
-                            </p>
+                            <div className="rounded-lg bg-blue-50 dark:bg-blue-950 p-4 border border-blue-200 dark:border-blue-800">
+                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                    Email sent successfully!
+                                </p>
+                                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                                    We've sent a password reset link to <strong>{email}</strong>
+                                </p>
+                            </div>
+                            <div className="space-y-2 text-sm text-muted-foreground">
+                                <p>📧 Check your inbox (and spam folder)</p>
+                                <p>⏱️ The link expires in 1 hour</p>
+                                <p>🔒 Click the link to reset your password</p>
+                            </div>
                             <Link href="/login">
                                 <Button variant="outline" className="w-full">
                                     <ArrowLeft className="mr-2 h-4 w-4" />
