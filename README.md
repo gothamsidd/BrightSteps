@@ -34,6 +34,11 @@ BrightSteps uses a fully custom-built JWT authentication system with:
 * Manage resumes, cover letters, interview results, and insights
 * Simple, focused UI for seamless workflows
 
+### 📧 Email & Password Management
+* Secure Forgot Password flow
+* Email notifications via **Resend**
+* Password reset tokens with expiration
+
 ### 🧱 Built With
 
 * **Next.js 15 (App Router)** — UI, routing & backend routes
@@ -41,6 +46,7 @@ BrightSteps uses a fully custom-built JWT authentication system with:
 * **JWT + Custom Middleware** — authentication
 * **TailwindCSS** — responsive UI styling
 * **Google Gemini AI** — intelligent career analysis
+* **Resend** — email infrastructure
 * **React 19** — clean, reusable client components
 
 ---
@@ -59,15 +65,17 @@ BrightSteps/
   prisma/
   public/
   hooks/
+  scripts/
 ```
 
 * `actions/` — server actions for AI features
 * `app/api/` — backend API routes
-* `app/(auth)/` — login, register screens
+* `app/(auth)/` — login, register, forgot-password screens
 * `app/(main)/` — dashboard, resume tools, interview prep
 * `prisma/` — schema + migrations
 * `hooks/` — custom React hooks
 * `components/` — reusable UI blocks
+* `scripts/` — utility scripts for testing and verification
 
 ---
 
@@ -80,6 +88,7 @@ The authentication system was implemented manually, with no external frameworks:
 * Middleware validating protected requests
 * Secure HTTP-only cookies
 * Logout clearing token sessions
+* Forgot Password flow with email verification
 * Error handling for invalid credentials / expired tokens
 
 This ensures maximum control, transparency, and security.
@@ -101,12 +110,24 @@ Install dependencies:
 npm install
 ```
 
-Create your environment variables:
+Create your environment variables in a `.env` file:
 
-```
+```env
+# Database
 DATABASE_URL="your_database_url"
+
+# Auth
 JWT_SECRET="your_jwt_secret"
+
+# AI
 GEMINI_API_KEY="your_gemini_api_key"
+
+# Email (Resend)
+RESEND_API_KEY="your_resend_api_key"
+RESEND_FROM_EMAIL="onboarding@resend.dev" # Or your verified domain email
+
+# App
+NEXT_PUBLIC_APP_URL="http://localhost:3000" # Update to your Vercel URL in production
 ```
 
 Run Prisma migrations:
