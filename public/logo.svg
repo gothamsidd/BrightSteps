@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" fill="none">
+  <!-- Icon: Rising Steps / Spark -->
+  <path d="M10 45 L25 45 L25 30 L40 30 L40 15 L55 15" stroke="url(#paint0_linear)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="55" cy="15" r="4" fill="#0EA5E9" />
+  
+  <!-- Text: BrightSteps -->
+  <text x="70" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="32" fill="#FFFFFF">BrightSteps</text>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="paint0_linear" x1="10" y1="45" x2="55" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#2DD4BF"/>
+    </linearGradient>
+  </defs>
+</svg>

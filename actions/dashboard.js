@@ -4,11 +4,16 @@ import { db } from "@/lib/prisma";
 import { checkUser } from "@/lib/checkUser";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
 export const generateAIInsights = async (industry) => {
   console.log("generateAIInsights called for:", industry);
+
+  const apiKey = process.env.GEMINI_API_KEY;
+  console.log("API Key present:", !!apiKey);
+  if (!apiKey) throw new Error("GEMINI_API_KEY is missing");
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+
   const prompt = `
           Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
           {

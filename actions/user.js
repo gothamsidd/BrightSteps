@@ -64,7 +64,7 @@ export async function updateUser(data) {
     );
 
     revalidatePath("/");
-    return result.user;
+    return result.updatedUser;
   } catch (error) {
     console.log("CAUGHT ERROR TYPE:", typeof error);
     console.log("CAUGHT ERROR STRING:", String(error));

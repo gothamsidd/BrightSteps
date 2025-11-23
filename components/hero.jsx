@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import VideoModal from "@/components/video-modal";
 
 const HeroSection = () => {
   const imageRef = useRef(null);
@@ -46,13 +47,10 @@ const HeroSection = () => {
               Get Started
             </Button>
           </Link>
-          <Link href="https://www.youtube.com/roadsidecoder">
-            <Button size="lg" variant="outline" className="px-8">
-              Watch Demo
-            </Button>
-          </Link>
+          <VideoModal />
         </div>
-        <div className="hero-image-wrapper mt-5 md:mt-0">
+        <div className="hero-image-wrapper mt-5 md:mt-0 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/20 blur-3xl rounded-full -z-10" />
           <div ref={imageRef} className="hero-image">
             <Image
               src="/banner.jpeg"

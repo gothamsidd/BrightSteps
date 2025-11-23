@@ -1,7 +1,7 @@
 export const testimonial = [
   {
     quote:
-      "The AI-powered interview prep was a game-changer. Landed my dream job at a top tech company!",
+      "BrightSteps' AI interview prep was a lifesaver. The feedback was so detailed, I felt completely ready for my technical rounds.",
     author: "Sarah Chen",
     image: "https://randomuser.me/api/portraits/women/75.jpg",
     role: "Software Engineer",
@@ -9,7 +9,7 @@ export const testimonial = [
   },
   {
     quote:
-      "The industry insights helped me pivot my career successfully. The salary data was spot-on!",
+      "I used the Resume Builder to revamp my CV. The AI suggestions helped me highlight my achievements perfectly.",
     author: "Michael Rodriguez",
     image: "https://randomuser.me/api/portraits/men/75.jpg",
     role: "Product Manager",
@@ -17,7 +17,7 @@ export const testimonial = [
   },
   {
     quote:
-      "My resume's ATS score improved significantly. Got more interviews in two weeks than in six months!",
+      "The industry insights gave me a clear roadmap for my career transition. Highly recommend BrightSteps!",
     author: "Priya Patel",
     image: "https://randomuser.me/api/portraits/women/74.jpg",
     role: "Marketing Director",

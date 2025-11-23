@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <AuthProvider>
+            <div className="animated-gradient-bg" />
             <Header />
             <main className="min-h-screen">{children}</main>
             <Toaster richColors />
