@@ -6,8 +6,11 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
+    console.log("Forgot Password API received request");
     try {
-        const { email } = await req.json();
+        const body = await req.json();
+        const { email } = body;
+        console.log("Request for email:", email);
 
         if (!email) {
             return NextResponse.json(
@@ -16,13 +19,20 @@ export async function POST(req) {
             );
         }
 
+        // Check Env Vars
+        if (!process.env.RESEND_API_KEY) {
+            console.error("CRITICAL: RESEND_API_KEY is missing");
+            return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+        }
+
         // Find user by email
+        console.log("Searching for user in DB...");
         const user = await db.user.findUnique({
             where: { email },
         });
+        console.log("User search result:", user ? "Found" : "Not Found");
 
         if (!user) {
-            // Don't reveal if user exists or not (security best practice)
             return NextResponse.json({
                 message: "If an account exists with this email, you will receive a password reset link.",
             });
@@ -33,6 +43,7 @@ export async function POST(req) {
         const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
 
         // Save token to database
+        console.log("Updating user with reset token...");
         await db.user.update({
             where: { email },
             data: {
@@ -40,17 +51,17 @@ export async function POST(req) {
                 resetTokenExpiry,
             },
         });
+        console.log("User updated successfully");
 
         // Create reset link
-        const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/reset-password?token=${resetToken}`;
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
+        console.log("Generated reset link for:", appUrl);
 
         // Send email using Resend
         try {
-            console.log("Attempting to send email to:", email);
-            console.log("Using API key:", process.env.RESEND_API_KEY ? "API key is set" : "API key is MISSING");
-            console.log("From email:", process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev");
-
-            const result = await resend.emails.send({
+            console.log("Sending email via Resend...");
+            const { data, error } = await resend.emails.send({
                 from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
                 to: email,
                 subject: "Reset Your BrightSteps Password",
@@ -68,22 +79,23 @@ export async function POST(req) {
         `,
             });
 
-            console.log("✅ Password reset email sent successfully!");
-            console.log("Email ID:", result.id);
+            if (error) {
+                console.error("Resend API returned error:", error);
+                // We log it but don't throw to user, unless we want to debug
+            } else {
+                console.log("Resend API success:", data);
+            }
         } catch (emailError) {
-            console.error("❌ Failed to send email:");
-            console.error("Error message:", emailError.message);
-            console.error("Error details:", JSON.stringify(emailError, null, 2));
-            // Still return success to user (don't reveal if email failed)
+            console.error("Resend execution error:", emailError);
         }
 
         return NextResponse.json({
             message: "If an account exists with this email, you will receive a password reset link.",
         });
     } catch (error) {
-        console.error("Forgot password error:", error);
+        console.error("Forgot password CRITICAL error:", error);
         return NextResponse.json(
-            { error: "Failed to process request" },
+            { error: "Failed to process request: " + error.message },
             { status: 500 }
         );
     }
