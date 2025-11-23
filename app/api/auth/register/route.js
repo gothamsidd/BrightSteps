@@ -22,10 +22,8 @@ export async function POST(req) {
             const existingUser = await db.user.findUnique({
                 where: { email },
             });
-            console.log("Existing user check done. Result:", existingUser ? "Found" : "Not Found");
 
             if (existingUser) {
-                console.log("User already exists");
                 return NextResponse.json(
                     { error: "User already exists" },
                     { status: 400 }
@@ -36,11 +34,9 @@ export async function POST(req) {
             throw dbError;
         }
 
-        console.log("Hashing password...");
         let hashedPassword;
         try {
             hashedPassword = await hashPassword(password);
-            console.log("Password hashed");
         } catch (hashError) {
             console.error("Hash Error:", hashError);
             throw hashError;
@@ -56,15 +52,12 @@ export async function POST(req) {
                     name,
                 },
             });
-            console.log("User created:", user.id);
         } catch (createError) {
             console.error("DB Create Error:", createError);
             throw createError;
         }
 
-        console.log("Signing token...");
         const token = signToken({ userId: user.id, email: user.email });
-        console.log("Token signed");
 
         const cookieStore = await cookies();
         cookieStore.set("token", token, {

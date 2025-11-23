@@ -10,12 +10,7 @@ export async function updateUser(data) {
   if (!user) throw new Error("Unauthorized");
 
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const logPath = path.join(process.cwd(), 'debug.log');
-    const log = (msg) => fs.appendFileSync(logPath, new Date().toISOString() + ': ' + msg + '\n');
-
-    log("updateUser called with data: " + JSON.stringify(data));
+    console.log("updateUser called with data: " + JSON.stringify(data));
 
     // Start a transaction to handle both operations
     const result = await db.$transaction(
@@ -90,19 +85,6 @@ export async function updateUser(data) {
     revalidatePath("/");
     return result.updatedUser;
   } catch (error) {
-    const fs = require('fs');
-    const path = require('path');
-    const logPath = path.join(process.cwd(), 'debug.log');
-    const log = (msg) => fs.appendFileSync(logPath, new Date().toISOString() + ': ' + msg + '\n');
-
-    log("CAUGHT ERROR TYPE: " + typeof error);
-    log("CAUGHT ERROR STRING: " + String(error));
-    log("CAUGHT ERROR OBJECT: " + JSON.stringify(error, Object.getOwnPropertyNames(error)));
-    log("STACK: " + error.stack);
-
-    console.log("CAUGHT ERROR TYPE:", typeof error);
-    console.log("CAUGHT ERROR STRING:", String(error));
-    console.log("CAUGHT ERROR OBJECT:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
     console.error("Error updating user and industry:", error);
     throw new Error("Failed to update profile: " + (error.message || String(error)));
   }

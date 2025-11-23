@@ -5,6 +5,9 @@ import { checkUser } from "@/lib/checkUser";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const generateAIInsights = async (industry) => {
+  const user = await checkUser();
+  if (!user) throw new Error("Unauthorized");
+
   console.log("generateAIInsights called for:", industry);
 
   const apiKey = process.env.GEMINI_API_KEY;

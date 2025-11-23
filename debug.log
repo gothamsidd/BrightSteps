@@ -1,2 +1,5 @@
 2025-11-23T07:40:34.255Z: updateUser called with data: {"name":"Siddharth Pareek","bio":"hey","industry":"tech-it-services","experience":1,"skills":["python"]}
 2025-11-23T14:28:00.867Z: signToken called with payload: {"userId":"e63450f4-8173-40b5-96fd-6a2c3712a7e0","email":"sidd3j27@gmail.com"}
+2025-11-23T15:00:47.196Z: signToken called with payload: {"userId":"e63450f4-8173-40b5-96fd-6a2c3712a7e0","email":"sidd3j27@gmail.com"}
+2025-11-23T16:59:46.384Z: signToken called with payload: {"userId":"e63450f4-8173-40b5-96fd-6a2c3712a7e0","email":"sidd3j27@gmail.com"}
+2025-11-23T17:04:18.316Z: signToken called with payload: {"userId":"e63450f4-8173-40b5-96fd-6a2c3712a7e0","email":"sidd3j27@gmail.com"}

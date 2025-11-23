@@ -119,6 +119,11 @@ export default function ResumeBuilder({ initialContent }) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const generatePDF = async () => {
+    if (!previewContent || previewContent.trim() === "") {
+      toast.error("Resume content is empty. Please add details before downloading.");
+      return;
+    }
+
     setIsGenerating(true);
     try {
       const element = document.getElementById("resume-pdf");
@@ -133,6 +138,7 @@ export default function ResumeBuilder({ initialContent }) {
       await html2pdf().set(opt).from(element).save();
     } catch (error) {
       console.error("PDF generation error:", error);
+      toast.error("Failed to generate PDF");
     } finally {
       setIsGenerating(false);
     }
