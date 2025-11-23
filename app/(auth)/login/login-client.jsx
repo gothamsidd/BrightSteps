@@ -36,8 +36,11 @@ export default function LoginClient() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-background">
-            <Card className="w-full max-w-md">
+        <div className="flex items-center justify-center min-h-screen bg-background relative">
+            {/* Dark overlay for better contrast */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+            <Card className="w-full max-w-md relative z-10 shadow-xl border-0 bg-card">
                 <CardHeader>
                     <CardTitle>Welcome Back</CardTitle>
                     <CardDescription>Enter your credentials to access your account</CardDescription>
