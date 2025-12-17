@@ -8,9 +8,8 @@ const nextConfig = {
       },
     ],
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // ESLint is handled via .eslintrc or eslint.config.js
+  // Removed deprecated eslint config from here
 };
 
 export default nextConfig;
