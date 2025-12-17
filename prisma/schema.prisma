@@ -33,6 +33,8 @@ model User {
   assessments   Assessment[]
   resume        Resume?
   coverLetter   CoverLetter[]
+  calendarEvents CalendarEvent[]
+  todos         Todo[]
 }
 
 model Assessment {
@@ -102,4 +104,40 @@ model IndustryInsight {
   nextUpdate    DateTime  // Scheduled update time
 
   @@index([industry])
+}
+
+model CalendarEvent {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  location    String?
+  type        String    @default("event") // "event", "interview", "deadline", "meeting"
+  color       String    @default("blue") // For UI color coding
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([startDate])
+}
+
+model Todo {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  dueDate     DateTime?
+  priority    String    @default("medium") // "low", "medium", "high"
+  category    String?   // "career", "learning", "application", etc.
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([completed])
+  @@index([dueDate])
 }

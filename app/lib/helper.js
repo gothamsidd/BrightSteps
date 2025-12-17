@@ -8,8 +8,21 @@ export function entriesToMarkdown(entries, type) {
       .map((entry) => {
         const dateRange = entry.current
           ? `${entry.startDate} - Present`
-          : `${entry.startDate} - ${entry.endDate}`;
-        return `### ${entry.title} @ ${entry.organization}\n${dateRange}\n\n${entry.description}`;
+          : entry.startDate && entry.endDate
+          ? `${entry.startDate} - ${entry.endDate}`
+          : entry.startDate
+          ? entry.startDate
+          : "";
+        
+        const titleLine = entry.organization
+          ? `### ${entry.title} @ ${entry.organization}`
+          : `### ${entry.title}`;
+        
+        const projectLink = entry.projectLink
+          ? `\n🔗 [View Project](${entry.projectLink})`
+          : "";
+        
+        return `${titleLine}${dateRange ? `\n${dateRange}` : ""}${projectLink}\n\n${entry.description}`;
       })
       .join("\n\n")
   );

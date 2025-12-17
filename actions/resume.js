@@ -56,11 +56,21 @@ export async function improveWithAI({ current, type }) {
   if (!userWithInsights) throw new Error("User not found");
 
   const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
+    console.error("improveWithAI error: GEMINI_API_KEY is missing");
+    throw new Error(
+      "AI enhancement is not configured. Please set GEMINI_API_KEY in your environment."
+    );
+  }
+
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
+  const industryLabel = userWithInsights.industry || "your";
+
   const prompt = `
-    As an expert resume writer, improve the following ${type} description for a ${userWithInsights.industry} professional.
+    As an expert resume writer, improve the following ${type} description for a ${industryLabel} industry professional.
     Make it more impactful, quantifiable, and aligned with industry standards.
     Current content: "${current}"
 

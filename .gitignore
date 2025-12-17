@@ -21,7 +21,6 @@
 /build
 
 # misc
-.DS_Store
 *.pem
 
 # debug
@@ -29,9 +28,27 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+debug.log
 
-# env files (can opt-in for committing if needed)
+# env files - NEVER commit these! They contain sensitive API keys and secrets
+.env
+.env.*
+!.env.example
+.env.local
+.env*.local
+.env.development
+.env.production
+.env.test
+.env.development.local
+.env.production.local
+.env.test.local
 
+# API keys and secrets (extra safety)
+*.key
+*.pem
+secrets/
+.secrets/
+config/secrets.json
 
 # vercel
 .vercel
@@ -39,3 +56,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma
+*.db
+*.db-journal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS
+*.log
+*.tmp
+*.temp
+.cache/

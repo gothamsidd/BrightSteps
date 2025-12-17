@@ -29,7 +29,7 @@ import useFetch from "@/hooks/use-fetch";
 import { useAuth } from "@/components/providers/auth-provider";
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { resumeSchema } from "@/app/lib/schema";
-import html2pdf from "html2pdf.js/dist/html2pdf.min.js";
+// html2pdf uses browser-only globals; load it dynamically on the client
 
 export default function ResumeBuilder({ initialContent }) {
   const [activeTab, setActiveTab] = useState("edit");
@@ -124,9 +124,15 @@ export default function ResumeBuilder({ initialContent }) {
       return;
     }
 
+    const element = document.getElementById("resume-pdf");
+    if (!element) {
+      toast.error("Something went wrong preparing the PDF. Please try again.");
+      return;
+    }
+
     setIsGenerating(true);
     try {
-      const element = document.getElementById("resume-pdf");
+      const html2pdf = (await import("html2pdf.js")).default;
       const opt = {
         margin: [15, 15],
         filename: "resume.pdf",
@@ -455,19 +461,22 @@ export default function ResumeBuilder({ initialContent }) {
               preview={resumeMode}
             />
           </div>
-          <div className="hidden">
-            <div id="resume-pdf">
-              <MDEditor.Markdown
-                source={previewContent}
-                style={{
-                  background: "white",
-                  color: "black",
-                }}
-              />
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
+      {/* Hidden markdown container used only for generating PDF.
+          Kept mounted regardless of active tab so the PDF button
+          works even while filling the form. */}
+      <div className="hidden">
+        <div id="resume-pdf">
+          <MDEditor.Markdown
+            source={previewContent}
+            style={{
+              background: "white",
+              color: "black",
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

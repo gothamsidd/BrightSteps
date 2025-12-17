@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { entrySchema } from "@/app/lib/schema";
+import { experienceSchema, educationSchema, projectSchema } from "@/app/lib/schema";
 import { Sparkles, PlusCircle, X, Pencil, Save, Loader2 } from "lucide-react";
 import { improveWithAI } from "@/actions/resume";
 import { toast } from "sonner";
@@ -30,6 +30,18 @@ const formatDisplayDate = (dateString) => {
 export function EntryForm({ type, entries, onChange }) {
   const [isAdding, setIsAdding] = useState(false);
 
+  // Select schema based on type
+  const getSchema = () => {
+    if (type.toLowerCase() === "experience") return experienceSchema;
+    if (type.toLowerCase() === "education") return educationSchema;
+    if (type.toLowerCase() === "project") return projectSchema;
+    return experienceSchema; // default
+  };
+
+  const isProject = type.toLowerCase() === "project";
+  const isEducation = type.toLowerCase() === "education";
+  const isExperience = type.toLowerCase() === "experience";
+
   const {
     register,
     handleSubmit: handleValidation,
@@ -38,13 +50,14 @@ export function EntryForm({ type, entries, onChange }) {
     watch,
     setValue,
   } = useForm({
-    resolver: zodResolver(entrySchema),
+    resolver: zodResolver(getSchema()),
     defaultValues: {
       title: "",
-      organization: "",
+      organization: isProject ? "" : "",
       startDate: "",
       endDate: "",
       description: "",
+      projectLink: "",
       current: false,
     },
   });
@@ -54,8 +67,12 @@ export function EntryForm({ type, entries, onChange }) {
   const handleAdd = handleValidation((data) => {
     const formattedEntry = {
       ...data,
-      startDate: formatDisplayDate(data.startDate),
-      endDate: data.current ? "" : formatDisplayDate(data.endDate),
+      startDate: data.startDate ? formatDisplayDate(data.startDate) : "",
+      endDate: isEducation 
+        ? formatDisplayDate(data.endDate) 
+        : (data.current ? "" : (data.endDate ? formatDisplayDate(data.endDate) : "")),
+      // Remove projectLink if empty for non-projects
+      ...(isProject ? { projectLink: data.projectLink || "" } : {}),
     };
 
     onChange([...entries, formattedEntry]);
@@ -108,7 +125,7 @@ export function EntryForm({ type, entries, onChange }) {
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {item.title} @ {item.organization}
+                {item.title} {item.organization ? `@ ${item.organization}` : ""}
               </CardTitle>
               <Button
                 variant="outline"
@@ -120,14 +137,30 @@ export function EntryForm({ type, entries, onChange }) {
               </Button>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {item.current
-                  ? `${item.startDate} - Present`
-                  : `${item.startDate} - ${item.endDate}`}
-              </p>
+              {(item.startDate || item.endDate) && (
+                <p className="text-sm text-muted-foreground">
+                  {item.current
+                    ? `${item.startDate} - Present`
+                    : item.startDate && item.endDate
+                    ? `${item.startDate} - ${item.endDate}`
+                    : item.startDate
+                    ? item.startDate
+                    : ""}
+                </p>
+              )}
               <p className="mt-2 text-sm whitespace-pre-wrap">
                 {item.description}
               </p>
+              {isProject && item.projectLink && (
+                <a
+                  href={item.projectLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 text-sm text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  🔗 View Project
+                </a>
+              )}
             </CardContent>
           </Card>
         ))}
@@ -142,7 +175,13 @@ export function EntryForm({ type, entries, onChange }) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Input
-                  placeholder="Title/Position"
+                  placeholder={
+                    isProject
+                      ? "Project Name"
+                      : isEducation
+                      ? "Degree/Certification"
+                      : "Title/Position"
+                  }
                   {...register("title")}
                   error={errors.title}
                 />
@@ -150,22 +189,43 @@ export function EntryForm({ type, entries, onChange }) {
                   <p className="text-sm text-red-500">{errors.title.message}</p>
                 )}
               </div>
-              <div className="space-y-2">
-                <Input
-                  placeholder="Organization/Company"
-                  {...register("organization")}
-                  error={errors.organization}
-                />
-                {errors.organization && (
-                  <p className="text-sm text-red-500">
-                    {errors.organization.message}
-                  </p>
-                )}
-              </div>
+              {!isProject && (
+                <div className="space-y-2">
+                  <Input
+                    placeholder={
+                      isEducation ? "Institution Name" : "Organization/Company"
+                    }
+                    {...register("organization")}
+                    error={errors.organization}
+                  />
+                  {errors.organization && (
+                    <p className="text-sm text-red-500">
+                      {errors.organization.message}
+                    </p>
+                  )}
+                </div>
+              )}
+              {isProject && (
+                <div className="space-y-2">
+                  <Input
+                    placeholder="Organization/Company (Optional)"
+                    {...register("organization")}
+                    error={errors.organization}
+                  />
+                  {errors.organization && (
+                    <p className="text-sm text-red-500">
+                      {errors.organization.message}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  {isProject ? "Start Date (Optional)" : "Start Date"}
+                </label>
                 <Input
                   type="month"
                   {...register("startDate")}
@@ -178,10 +238,13 @@ export function EntryForm({ type, entries, onChange }) {
                 )}
               </div>
               <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  {isProject ? "End Date (Optional)" : "End Date"}
+                </label>
                 <Input
                   type="month"
                   {...register("endDate")}
-                  disabled={current}
+                  disabled={isExperience && current}
                   error={errors.endDate}
                 />
                 {errors.endDate && (
@@ -192,24 +255,56 @@ export function EntryForm({ type, entries, onChange }) {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="current"
-                {...register("current")}
-                onChange={(e) => {
-                  setValue("current", e.target.checked);
-                  if (e.target.checked) {
-                    setValue("endDate", "");
-                  }
-                }}
-              />
-              <label htmlFor="current">Current {type}</label>
-            </div>
+            {isExperience && (
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="current"
+                  {...register("current")}
+                  onChange={(e) => {
+                    setValue("current", e.target.checked);
+                    if (e.target.checked) {
+                      setValue("endDate", "");
+                    }
+                  }}
+                />
+                <label htmlFor="current">Current Position</label>
+              </div>
+            )}
+
+            {isProject && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Project Link (Optional)</label>
+                <Input
+                  type="url"
+                  placeholder="https://github.com/username/project or https://project-demo.com"
+                  {...register("projectLink")}
+                  error={errors.projectLink}
+                />
+                {errors.projectLink && (
+                  <p className="text-sm text-red-500">
+                    {errors.projectLink.message}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
+              <label className="text-sm font-medium">
+                {isProject
+                  ? "Project Description"
+                  : isEducation
+                  ? "Description (e.g., GPA, achievements, coursework)"
+                  : "Description"}
+              </label>
               <Textarea
-                placeholder={`Description of your ${type.toLowerCase()}`}
+                placeholder={
+                  isProject
+                    ? "Describe your project, technologies used, and key features..."
+                    : isEducation
+                    ? "Describe your degree, achievements, relevant coursework..."
+                    : "Describe your role, responsibilities, and achievements..."
+                }
                 className="h-32"
                 {...register("description")}
                 error={errors.description}

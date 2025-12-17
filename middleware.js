@@ -6,6 +6,7 @@ const protectedRoutes = [
   "/interview",
   "/ai-cover-letter",
   "/onboarding",
+  "/calendar",
 ];
 
 export function middleware(req) {
