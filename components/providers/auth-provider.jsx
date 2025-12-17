@@ -22,7 +22,9 @@ export function AuthProvider({ children }) {
 
     async function checkUser() {
         try {
-            const res = await fetch("/api/auth/me");
+            const res = await fetch("/api/auth/me", {
+                credentials: "include", // Ensure cookies are sent
+            });
             const data = await res.json();
             setUser(data.user);
         } catch (error) {
@@ -37,10 +39,19 @@ export function AuthProvider({ children }) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
+            credentials: "include", // Ensure cookies are sent
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
+        
+        // Update user state immediately
         setUser(data.user);
+        
+        // Verify the user was set correctly
+        if (!data.user) {
+            throw new Error("Login failed. Please try again.");
+        }
+        
         return data.user;
     }
 

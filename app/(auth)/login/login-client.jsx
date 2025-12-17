@@ -25,14 +25,25 @@ export default function LoginClient() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (loading) return; // Prevent double submission
+        
         setLoading(true);
         try {
-            await login(email, password);
+            const user = await login(email, password);
+            
+            if (!user) {
+                throw new Error("Login failed. Please try again.");
+            }
+            
             toast.success("Logged in successfully");
-            router.push(redirect);
+            
+            // Wait for cookie to be set and state to update
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Use window.location for reliable navigation that ensures middleware sees the cookie
+            window.location.href = redirect;
         } catch (error) {
-            toast.error(error.message);
-        } finally {
+            toast.error(error.message || "Failed to sign in");
             setLoading(false);
         }
     };
